@@ -1,6 +1,6 @@
 #include "cvhw.h"
 
-CVHW::CVHW(char* image_name , int flag = 1 )
+CVHW::CVHW(char* image_name , int flag )
 {
 	try
 	{
