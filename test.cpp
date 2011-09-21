@@ -16,8 +16,8 @@ int main ( )
 	//cvhw1.diagonally_mirrored();
 	//cv::imshow("diagonally mirrored",cvhw1.get_image());
 
-	cvhw2.binary();
-	cv::imshow("binary",cvhw2.get_image());
+	cvhw2.histogram();
+	//cv::imshow("binary",cvhw2.get_image());
 
 	cv::waitKey(0);
 	return 0;
