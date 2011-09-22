@@ -4,10 +4,31 @@
 class CVHW
 {
 	cv::Mat image;
+	
 	void set_pix ( int , int , int  );
 	uchar get_pix ( int , int );
-public:
 
+	//run-length algorithm varibles
+	int runs;
+	int* row_start;
+	int* row_end;
+	int* row;
+	int* start_col;
+	int* end_col;
+	int* perm_label;
+	int* label;
+	int* next;
+	int* eq_class;
+
+	void count_run();
+	void initialize_run_table( );
+	void make_equivalent(int , int);
+	void initialize_equiv();
+	void run_length();
+
+	void classic_connected_components( );
+public:
+	
 	CVHW(char*,int flag=0);
 	~CVHW();
 	cv::Mat get_image();
@@ -17,6 +38,6 @@ public:
 	void diagonally_mirrored();
 	//homework 2
 	void binary(int threshold=128);
-	void histogram();
-	void connected_components();
+	int* histogram();
+	void connected_components(int threshold=500);
 };

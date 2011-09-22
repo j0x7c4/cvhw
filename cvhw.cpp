@@ -20,7 +20,18 @@ CVHW::CVHW(char* image_name , int flag )
 }
 
 
-CVHW::~CVHW(){}
+CVHW::~CVHW()
+{
+	delete row_start;
+	delete row_end;
+	delete row;
+	delete start_col;
+	delete end_col;
+	delete perm_label;
+	delete label;
+	delete next;
+	delete eq_class;
+}
 
 void CVHW::set_pix(int x, int y, int value)
 {

@@ -16,7 +16,20 @@ int main ( )
 	//cvhw1.diagonally_mirrored();
 	//cv::imshow("diagonally mirrored",cvhw1.get_image());
 
-	cvhw2.histogram();
+	int* a = cvhw2.histogram();
+	FILE* f = fopen("histogram.csv","w");
+	for ( int i=0 ; i<256; i++ )
+	{
+		fprintf(f,"%d,",i);
+	}
+	fprintf(f,"\n");
+	for ( int i=0 ; i<256 ; i++ )
+	{
+		fprintf(f,"%d,",a[i]);
+	}
+	fclose(f);
+	delete a;
+
 	//cv::imshow("binary",cvhw2.get_image());
 
 	cv::waitKey(0);
