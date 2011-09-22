@@ -3,7 +3,7 @@
 
 int main ( )
 {
-	CVHW cvhw2("E:\\source\\CVHW\\lena.bmp",0);
+	CVHW cvhw2("C:\\Users\\Jie\\Dropbox\\test.bmp",0);
 	cv::imshow("origin",cvhw2.get_image());
 
 	//cvhw1.upside_down();
@@ -15,7 +15,7 @@ int main ( )
 	
 	//cvhw1.diagonally_mirrored();
 	//cv::imshow("diagonally mirrored",cvhw1.get_image());
-
+	/*
 	int* a = cvhw2.histogram();
 	FILE* f = fopen("histogram.csv","w");
 	for ( int i=0 ; i<256; i++ )
@@ -31,7 +31,8 @@ int main ( )
 	delete a;
 
 	//cv::imshow("binary",cvhw2.get_image());
-
+	*/
+	cvhw2.connected_components();
 	cv::waitKey(0);
 	return 0;
 }

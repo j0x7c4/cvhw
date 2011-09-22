@@ -62,6 +62,7 @@ void CVHW::count_run ( )
 		flag = false;
 		for ( int j=0 ; j<n ; j++) 
 		{
+			printf("%d",get_pix(i,j)>0?1:0);
 			if ( get_pix(i,j) > 0 && flag ==false) //meet the first 1 of a new run, mark flag as true
 			{
 				flag = true;
@@ -72,6 +73,7 @@ void CVHW::count_run ( )
 				flag = false; //end of a run, mark flag as false;
 			}
 		}
+		printf("\n");
 	}
 }
 
@@ -116,8 +118,12 @@ void CVHW::initialize_run_table( )
 			else if ( get_pix(i,j) == 0 && flag==true )
 			{
 				flag = false; //end of a run, mark flag as false;
-				end_col[num_runs]=j; //initialize end_col
+				end_col[num_runs]=j-1; //initialize end_col
 			}
+		}
+		if ( flag )
+		{
+			end_col[num_runs]=n-1;
 		}
 	}
 }
@@ -189,6 +195,12 @@ void CVHW::run_length ( )
 		if ( i==0 )
 		{
 			q=qlast = 0;
+			while ( p<=plast )
+			{
+				perm_label[p]=p;
+				p++;
+			}
+			continue;
 		}
 		else
 		{
@@ -231,7 +243,7 @@ void CVHW::run_length ( )
 	}
 
 	//bottom-up pass
-	for  ( int i=m-1 ; i>=0 ; i-- )
+	for  ( int i=m-1 ; i>=1 ; i-- )
 	{
 		p = row_start[i];
 		plast = row_end[i];
