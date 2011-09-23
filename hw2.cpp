@@ -198,6 +198,7 @@ void CVHW::run_length ( )
 			while ( p<=plast )
 			{
 				perm_label[p]=p;
+				label[p]=p;
 				p++;
 			}
 			continue;
