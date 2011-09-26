@@ -198,7 +198,6 @@ void CVHW::run_length ( )
 			while ( p<=plast )
 			{
 				perm_label[p]=p;
-				label[p]=p;
 				p++;
 			}
 			continue;
@@ -244,13 +243,14 @@ void CVHW::run_length ( )
 	}
 
 	//bottom-up pass
-	for  ( int i=m-1 ; i>=1 ; i-- )
+	for  ( int i=m-1 ; i>=0 ; i-- )
 	{
 		p = row_start[i];
 		plast = row_end[i];
 		if ( i == m-1 )
 		{
 			q=qlast = 0;
+			continue;
 		}
 		else
 		{
@@ -285,6 +285,7 @@ void CVHW::run_length ( )
 			{
 				perm_label[p] =label[perm_label[p]];
 			}
+			p++;
 		} 
 	}
 }
