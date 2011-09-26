@@ -32,6 +32,7 @@ public:
 	CVHW(char*,int flag=0);
 	~CVHW();
 	cv::Mat get_image();
+	void save_work(char*);
 	//homework 1
 	void upside_down();
 	void right_side_left();

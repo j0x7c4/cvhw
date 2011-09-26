@@ -3,12 +3,13 @@
 
 int main ( )
 {
-	CVHW cvhw2("C:\\Users\\Jie\\Dropbox\\test.bmp",0);
-	cv::imshow("origin",cvhw2.get_image());
+	CVHW cvhw1("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);
+	cv::imshow("origin",cvhw1.get_image());
 
-	//cvhw1.upside_down();
-	//cv::imshow("upside-down",cvhw1.get_image());
-
+	CVHW cvhw2("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);
+	cvhw2.diagonally_mirrored();
+	cv::imshow("upside-down",cvhw2.get_image());
+	cv::imwrite("C:\\Users\\Jie\\Dropbox\\lena_diagonally_mirrored.bmp",cvhw2.get_image());
 
 	//cvhw1.right_side_left();
 	//cv::imshow("right-side-left",cvhw1.get_image());
@@ -32,7 +33,7 @@ int main ( )
 
 	//cv::imshow("binary",cvhw2.get_image());
 	*/
-	cvhw2.connected_components();
+	//cvhw2.connected_components();
 	cv::waitKey(0);
 	return 0;
 }

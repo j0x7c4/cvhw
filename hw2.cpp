@@ -194,19 +194,18 @@ void CVHW::run_length ( )
 
 		if ( i==0 )
 		{
-			q=qlast = 0;
+			q=qlast = 0;/*
 			while ( p<=plast )
 			{
 				perm_label[p]=p;
 				p++;
-			}
-			continue;
+			}*/
 		}
 		else
 		{
 			q=row_start[i-1], qlast=row_end[i-1];
 		}
-		while ( p<=plast && q<=qlast )
+		while ( p<=plast && q<=qlast && q )
 		{
 			if ( end_col[p] < start_col[q] ) p++;
 			else if ( end_col[q]<start_col[p] ) q++;
@@ -250,7 +249,6 @@ void CVHW::run_length ( )
 		if ( i == m-1 )
 		{
 			q=qlast = 0;
-			continue;
 		}
 		else
 		{
@@ -261,7 +259,7 @@ void CVHW::run_length ( )
 		{
 
 		}
-		while ( p<=plast && q<=qlast )
+		while ( p<=plast && q<=qlast && q )
 		{
 			if ( end_col[p] < start_col[q] ) p++;
 			else if ( end_col[q]<start_col[p] ) q++;
@@ -297,9 +295,6 @@ void CVHW::classic_connected_components( )
 
 void CVHW::connected_components( int threshold )
 {
-
 	binary( );
 	run_length();
-	
-
 }
