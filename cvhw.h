@@ -1,6 +1,8 @@
 #include<core\core.hpp>
 #include<highgui\highgui.hpp>
-
+#include<vector>
+#include<set>
+#include<map>
 class CVHW
 {
 	cv::Mat image;
@@ -41,4 +43,12 @@ public:
 	void binary(int threshold=128);
 	int* histogram();
 	void connected_components(int threshold=500);
+	void make_bounding_box ();
+};
+
+struct bounding_box
+{
+	int top_left_x, top_left_y;
+	int width, height;
+	int centroid_x, centroid_y;
 };

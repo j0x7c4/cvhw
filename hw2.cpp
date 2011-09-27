@@ -62,7 +62,7 @@ void CVHW::count_run ( )
 		flag = false;
 		for ( int j=0 ; j<n ; j++) 
 		{
-			printf("%d",get_pix(i,j)>0?1:0);
+			//printf("%d",get_pix(i,j)>0?1:0);
 			if ( get_pix(i,j) > 0 && flag ==false) //meet the first 1 of a new run, mark flag as true
 			{
 				flag = true;
@@ -73,7 +73,7 @@ void CVHW::count_run ( )
 				flag = false; //end of a run, mark flag as false;
 			}
 		}
-		printf("\n");
+		//printf("\n");
 	}
 }
 
@@ -293,8 +293,23 @@ void CVHW::classic_connected_components( )
 
 }
 
+void CVHW::make_bounding_box ( )
+{
+	std::vector<bounding_box> bounding_boxes;
+
+}
 void CVHW::connected_components( int threshold )
 {
 	binary( );
 	run_length();
+	std::map<int,int> pixel_in_component;
+	
+	//count how many connected components
+	for ( int i = 1 ; i<=runs ; i++ )
+	{
+		pixel_in_component[perm_label[i]]+=end_col[i]-start_col[i];
+	}
+
+	//fliter small connected componets
+	//(std::map<int,int>*) iter= pixel_in_component.begin(); std::itera
 }
