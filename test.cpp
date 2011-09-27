@@ -3,7 +3,7 @@
 
 int main ( )
 {
-	CVHW cvhw1("C:\\Users\\Jie\\Dropbox\\test1.bmp",0);
+	CVHW cvhw1("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);
 	cv::imshow("origin",cvhw1.get_image());
 
 	//CVHW cvhw2("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);

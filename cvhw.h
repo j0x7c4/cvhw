@@ -22,10 +22,9 @@ typedef struct bounding_box
 class CVHW
 {
 	cv::Mat image;
-	
 	void set_pix ( int , int , int  );
 	uchar get_pix ( int , int );
-
+	void mark_centroid(int,int,int);
 	//run-length algorithm varibles
 	int runs;
 	int* row_start;
@@ -42,7 +41,7 @@ class CVHW
 	void initialize_run_table( );
 	void make_equivalent(int , int);
 	void initialize_equiv();
-	void run_length();
+	void run_length(int);
 
 	void classic_connected_components( );
 public:
@@ -58,8 +57,8 @@ public:
 	//homework 2
 	void binary(int threshold=128);
 	int* histogram();
-	void connected_components(int threshold=500);
-	void draw_bounding_box ( BOUNDING_BOX& );
+	void connected_components(int threshold=500, int flag = 4 );
+	void draw_connected_components ( BOUNDING_BOX& );
 };
 
 

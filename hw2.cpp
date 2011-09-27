@@ -62,7 +62,7 @@ void CVHW::count_run ( )
 		flag = false;
 		for ( int j=0 ; j<n ; j++) 
 		{
-			printf("%d",get_pix(i,j)>0?1:0);
+			//printf("%d",get_pix(i,j)>0?1:0);
 			if ( get_pix(i,j) > 0 && flag ==false) //meet the first 1 of a new run, mark flag as true
 			{
 				flag = true;
@@ -73,7 +73,7 @@ void CVHW::count_run ( )
 				flag = false; //end of a run, mark flag as false;
 			}
 		}
-		printf("\n");
+		//printf("\n");
 	}
 }
 
@@ -173,7 +173,7 @@ void CVHW::make_equivalent(int i1 , int i2)
 	return ;
 }
 
-void CVHW::run_length ( )
+void CVHW::run_length ( int flag )
 {
 	int m = image.rows;
 	int n = image.cols;
@@ -190,25 +190,23 @@ void CVHW::run_length ( )
 	for ( int i = 0 ; i<m ; i++ )
 	{
 		p = row_start[i];
+		if ( p==0 )
+			continue;
 		plast = row_end[i];
 
 		if ( i==0 )
 		{
-			q=qlast = 0;/*
-			while ( p<=plast )
-			{
-				perm_label[p]=p;
-				p++;
-			}*/
+			q=qlast = 0;
 		}
 		else
 		{
 			q=row_start[i-1], qlast=row_end[i-1];
 		}
+
 		while ( p<=plast && q<=qlast && q )
 		{
 			if ( end_col[p] < start_col[q] ) p++;
-			else if ( end_col[q]<start_col[p] ) q++;
+			else if ( end_col[q] < start_col[p] ) q++;
 			else
 			{
 				int plabel = perm_label[p];
@@ -226,7 +224,7 @@ void CVHW::run_length ( )
 		}
 
 		p = row_start[i];
-		while(p<=plast)
+		while( p<=plast)
 		{
 			int plabel = perm_label[p];
 			if ( plabel == 0 )
@@ -245,6 +243,8 @@ void CVHW::run_length ( )
 	for  ( int i=m-1 ; i>=0 ; i-- )
 	{
 		p = row_start[i];
+		if ( p==0 ) 
+			continue;
 		plast = row_end[i];
 		if ( i == m-1 )
 		{
@@ -255,14 +255,11 @@ void CVHW::run_length ( )
 			q=row_start[i+1];
 			qlast = row_end[i+1];
 		}
-		if ( p && q )
-		{
 
-		}
 		while ( p<=plast && q<=qlast && q )
 		{
 			if ( end_col[p] < start_col[q] ) p++;
-			else if ( end_col[q]<start_col[p] ) q++;
+			else if ( end_col[q]< start_col[p] ) q++;
 			else
 			{
 				if ( perm_label[p]!=perm_label[q] )
@@ -293,7 +290,19 @@ void CVHW::classic_connected_components( )
 
 }
 
-void CVHW::draw_bounding_box ( BOUNDING_BOX&  box )
+void CVHW::mark_centroid ( int x, int y ,int r )
+{
+	int mv[4][2] = { -1,0,0,1,1,0,0,-1};
+	for ( int i = 0 ; i<4 ; i++ )
+	{
+		set_pix(x,y,GRAY);
+		for ( int j = 1 ; j<r ; j++ )
+		{
+			set_pix(x+mv[i][0]*j,y+mv[i][1]*j,GRAY);
+		}
+	}
+}
+void CVHW::draw_connected_components ( BOUNDING_BOX&  box )
 {
 	for ( int i = box.top_left_x ; i<=box.bottom_right_x ; i++ ) // draw |
 	{
@@ -306,19 +315,26 @@ void CVHW::draw_bounding_box ( BOUNDING_BOX&  box )
 		set_pix(box.top_left_x,i,GRAY);
 		set_pix(box.bottom_right_x,i,GRAY);
 	}
+
+	mark_centroid(box.centroid_x,box.centroid_y,4);
 }
 
-void CVHW::connected_components( int threshold )
+void CVHW::connected_components( int threshold ,int flag )
 {
 	binary( );
-	run_length();
+	run_length(flag);
+	if ( flag == 4 )
+		printf("4-connected\n");
+	else
+		printf("8-connected\n");
+	printf("Each connected-component contains at least %d pixels\n",threshold);
 	std::map<int,BOUNDING_BOX> pixel_in_component;
 	std::vector<BOUNDING_BOX> draw_bounding_boxes;
 	
 	//count how many connected components
 	for ( int i = 1 ; i<=runs ; i++ )
 	{
-		pixel_in_component[perm_label[i]].sum_pixel+=end_col[i]-start_col[i];
+		pixel_in_component[perm_label[i]].sum_pixel+=end_col[i]-start_col[i]+1;
 		if ( pixel_in_component[perm_label[i]].top_left_x < 0 )
 			pixel_in_component[perm_label[i]].top_left_x = row[i];
 		if ( pixel_in_component[perm_label[i]].top_left_y < 0 || pixel_in_component[perm_label[i]].top_left_y > start_col[i] )
@@ -334,12 +350,20 @@ void CVHW::connected_components( int threshold )
 	{
 		if ( iter->second.sum_pixel >= threshold )
 		{
+			iter->second.centroid_x =( iter->second.top_left_x + iter->second.bottom_right_x ) / 2;
+			iter->second.centroid_y =( iter->second.top_left_y + iter->second.bottom_right_y ) / 2;
 			draw_bounding_boxes.push_back(iter->second);
+			printf("Label:%3d\t",iter->first);
+			printf("Pixels:%3d\t",iter->second.sum_pixel);
+			printf("Top-left Corner: (%3d,%3d)\t",iter->second.top_left_x,iter->second.top_left_x);
+			printf("Bottom-right Corner: (%3d,%3d)\t",iter->second.bottom_right_x,iter->second.bottom_right_y);
+			printf("\n");
 		}
 	}
 
 	for ( std::vector<BOUNDING_BOX>::iterator iter = draw_bounding_boxes.begin(); iter!=draw_bounding_boxes.end() ; iter++ )
 	{
-		draw_bounding_box(*iter);
+		draw_connected_components(*iter);
+		//break;
 	}
 }
