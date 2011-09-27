@@ -3,6 +3,22 @@
 #include<vector>
 #include<set>
 #include<map>
+
+//color define
+#define GRAY 128
+
+typedef struct bounding_box
+{
+	int sum_pixel;
+	int top_left_x, top_left_y;
+	int bottom_right_x, bottom_right_y;
+	int centroid_x, centroid_y;
+	bounding_box()
+	{
+		sum_pixel=0;
+		top_left_x = top_left_y = bottom_right_x = bottom_right_y = -1; //null
+	}
+}BOUNDING_BOX;
 class CVHW
 {
 	cv::Mat image;
@@ -43,12 +59,8 @@ public:
 	void binary(int threshold=128);
 	int* histogram();
 	void connected_components(int threshold=500);
-	void make_bounding_box ();
+	void draw_bounding_box ( BOUNDING_BOX& );
 };
 
-struct bounding_box
-{
-	int top_left_x, top_left_y;
-	int width, height;
-	int centroid_x, centroid_y;
-};
+
+

@@ -3,7 +3,7 @@
 
 int main ( )
 {
-	CVHW cvhw1("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);
+	CVHW cvhw1("C:\\Users\\Jie\\Dropbox\\test1.bmp",0);
 	cv::imshow("origin",cvhw1.get_image());
 
 	//CVHW cvhw2("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);
@@ -34,6 +34,7 @@ int main ( )
 	//cv::imshow("binary",cvhw2.get_image());
 	*/
 	cvhw1.connected_components();
+	cv::imshow("boundingbox",cvhw1.get_image());
 	cv::waitKey(0);
 	return 0;
 }

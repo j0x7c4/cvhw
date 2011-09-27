@@ -62,7 +62,7 @@ void CVHW::count_run ( )
 		flag = false;
 		for ( int j=0 ; j<n ; j++) 
 		{
-			//printf("%d",get_pix(i,j)>0?1:0);
+			printf("%d",get_pix(i,j)>0?1:0);
 			if ( get_pix(i,j) > 0 && flag ==false) //meet the first 1 of a new run, mark flag as true
 			{
 				flag = true;
@@ -73,7 +73,7 @@ void CVHW::count_run ( )
 				flag = false; //end of a run, mark flag as false;
 			}
 		}
-		//printf("\n");
+		printf("\n");
 	}
 }
 
@@ -293,23 +293,53 @@ void CVHW::classic_connected_components( )
 
 }
 
-void CVHW::make_bounding_box ( )
+void CVHW::draw_bounding_box ( BOUNDING_BOX&  box )
 {
-	std::vector<bounding_box> bounding_boxes;
+	for ( int i = box.top_left_x ; i<=box.bottom_right_x ; i++ ) // draw |
+	{
+		set_pix(i,box.top_left_y,GRAY);
+		set_pix(i,box.bottom_right_y,GRAY);
+	}
 
+	for ( int i = box.top_left_y ; i<= box.bottom_right_y ; i++ )
+	{
+		set_pix(box.top_left_x,i,GRAY);
+		set_pix(box.bottom_right_x,i,GRAY);
+	}
 }
+
 void CVHW::connected_components( int threshold )
 {
 	binary( );
 	run_length();
-	std::map<int,int> pixel_in_component;
+	std::map<int,BOUNDING_BOX> pixel_in_component;
+	std::vector<BOUNDING_BOX> draw_bounding_boxes;
 	
 	//count how many connected components
 	for ( int i = 1 ; i<=runs ; i++ )
 	{
-		pixel_in_component[perm_label[i]]+=end_col[i]-start_col[i];
+		pixel_in_component[perm_label[i]].sum_pixel+=end_col[i]-start_col[i];
+		if ( pixel_in_component[perm_label[i]].top_left_x < 0 )
+			pixel_in_component[perm_label[i]].top_left_x = row[i];
+		if ( pixel_in_component[perm_label[i]].top_left_y < 0 || pixel_in_component[perm_label[i]].top_left_y > start_col[i] )
+			pixel_in_component[perm_label[i]].top_left_y = start_col[i];
+		if ( pixel_in_component[perm_label[i]].bottom_right_x < row[i] )
+			pixel_in_component[perm_label[i]].bottom_right_x = row[i];
+		if ( pixel_in_component[perm_label[i]].bottom_right_y < end_col[i] )
+			pixel_in_component[perm_label[i]].bottom_right_y = end_col[i];
 	}
 
 	//fliter small connected componets
-	//(std::map<int,int>*) iter= pixel_in_component.begin(); std::itera
+	for ( std::map<int,BOUNDING_BOX>::iterator iter= pixel_in_component.begin(); iter != pixel_in_component.end() ; iter++ )
+	{
+		if ( iter->second.sum_pixel >= threshold )
+		{
+			draw_bounding_boxes.push_back(iter->second);
+		}
+	}
+
+	for ( std::vector<BOUNDING_BOX>::iterator iter = draw_bounding_boxes.begin(); iter!=draw_bounding_boxes.end() ; iter++ )
+	{
+		draw_bounding_box(*iter);
+	}
 }
