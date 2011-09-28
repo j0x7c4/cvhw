@@ -33,17 +33,17 @@ CVHW::~CVHW()
 	delete eq_class;
 }
 
-void CVHW::set_pix(cv::Mat* image, int x, int y, int value)
+void CVHW::set_pix(cv::Mat& image, int x, int y, int value)
 {
 	try
 	{
-		if ( x>=image->rows || y>=image->cols )
+		if ( x>=image.rows || y>=image.cols )
 		{
 			throw "wrong position!";
 		}
 		else
 		{
-			uchar* tp = image->data+x*image->cols+y;
+			uchar* tp = image.data+x*image.cols+y;
 			*tp = value;
 		}
 	}
@@ -53,17 +53,17 @@ void CVHW::set_pix(cv::Mat* image, int x, int y, int value)
 	}
 }
 
-uchar CVHW::get_pix(cv::Mat* image, int x, int y)
+uchar CVHW::get_pix(cv::Mat& image, int x, int y)
 {
 	try
 	{
-		if ( x>=image->rows || y>=image->cols )
+		if ( x>=image.rows || y>=image.cols )
 		{
 			throw "wrong position!";
 		}
 		else
 		{
-			uchar* tp = image->data+x*image->cols+y;
+			uchar* tp = image.data+x*image.cols+y;
 			return *tp;
 		}
 	}

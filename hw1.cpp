@@ -1,10 +1,10 @@
 #include "cvhw.h"
 //swap image[i][j] image[m-1-i][j]
-cv::Mat* CVHW::upside_down()
+void CVHW::upside_down(cv::Mat& t_image)
 {
-	cv::Mat* t_image = new cv::Mat(origin_image);
-	int m = t_image->rows;
-	int n = t_image->cols;
+	//cv::Mat* t_image = new cv::Mat(origin_image);
+	int m = t_image.rows;
+	int n = t_image.cols;
 
 	printf("doing upside down\n");
 
@@ -17,14 +17,13 @@ cv::Mat* CVHW::upside_down()
 			set_pix(t_image,i,j,t);
 		}
 	}
-	return t_image;
 }
 //swap image[i][j] image[i][n-1-j]
-cv::Mat* CVHW::right_side_left()
+void CVHW::right_side_left(cv::Mat& t_image)
 {
-	cv::Mat* t_image = new cv::Mat(origin_image);
-	int m = t_image->rows;
-	int n = t_image->cols;
+	//cv::Mat* t_image = new cv::Mat(origin_image);
+	int m = t_image.rows;
+	int n = t_image.cols;
 
 	printf("doing right-side-left\n");
 
@@ -37,15 +36,14 @@ cv::Mat* CVHW::right_side_left()
 			set_pix(t_image,i,j,t);
 		}
 	}
-	return t_image;
 }
 
 //swap image[i][j] image[j][i]
-cv::Mat* CVHW::diagonally_mirrored()
+void CVHW::diagonally_mirrored(cv::Mat& t_image)
 {
-	cv::Mat* t_image = new cv::Mat(origin_image);
-	int m = t_image->rows;
-	int n = t_image->cols;
+	//cv::Mat* t_image = new cv::Mat(origin_image);
+	int m = t_image.rows;
+	int n = t_image.cols;
 
 	printf("doing diagonally mirrored\n");
 
@@ -58,5 +56,4 @@ cv::Mat* CVHW::diagonally_mirrored()
 			set_pix(t_image,i,j,t);
 		}
 	}
-	return t_image;
 }

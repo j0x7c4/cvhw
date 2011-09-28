@@ -6,9 +6,13 @@ int main ( )
 	CVHW cvhw1("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);
 	cv::imshow("origin",cvhw1.get_image());
 
-	cv::Mat* image1 = cvhw1.connected_components();
-	cv::imshow("connected_componetns",*image1);
-	delete image1;
+	cv::Mat image1 = cvhw1.get_image().clone();
+	cvhw1.connected_components(image1);
+	cv::imshow("connected_componetns",image1);
+	
+	cv::Mat image2 = cvhw1.get_image().clone();
+	cvhw1.upside_down(image2);
+	cv::imshow("upsidedown",image2);
 
 	cv::imshow("origin2",cvhw1.get_image());
 	/*
