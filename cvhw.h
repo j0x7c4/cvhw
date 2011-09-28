@@ -21,10 +21,10 @@ typedef struct bounding_box
 }BOUNDING_BOX;
 class CVHW
 {
-	cv::Mat image;
-	void set_pix ( int , int , int  );
-	uchar get_pix ( int , int );
-	void mark_centroid(int,int,int);
+	cv::Mat origin_image;
+	void set_pix ( cv::Mat*, int , int , int  );
+	uchar get_pix ( cv::Mat*, int , int );
+	void mark_centroid(cv::Mat*,int,int,int);
 	//run-length algorithm varibles
 	int runs;
 	int* row_start;
@@ -38,10 +38,10 @@ class CVHW
 	int* eq_class;
 
 	void count_run();
-	void initialize_run_table( );
+	void initialize_run_table( cv::Mat*);
 	void make_equivalent(int , int);
 	void initialize_equiv();
-	void run_length(int);
+	void run_length(cv::Mat*, int);
 
 	void classic_connected_components( );
 public:
@@ -51,14 +51,14 @@ public:
 	cv::Mat get_image();
 	void save_work(char*);
 	//homework 1
-	void upside_down();
-	void right_side_left();
-	void diagonally_mirrored();
+	cv::Mat* upside_down();
+	cv::Mat* right_side_left();
+	cv::Mat* diagonally_mirrored();
 	//homework 2
-	void binary(int threshold=128);
+	cv::Mat* binary(int threshold=128);
 	int* histogram();
-	void connected_components(int threshold=500, int flag = 4 );
-	void draw_connected_components ( BOUNDING_BOX& );
+	cv::Mat* connected_components(int threshold=500, int flag = 4 );
+	void draw_connected_components ( cv::Mat*, BOUNDING_BOX& );
 };
 
 

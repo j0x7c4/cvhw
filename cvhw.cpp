@@ -4,13 +4,13 @@ CVHW::CVHW(char* image_name , int flag )
 {
 	try
 	{
-		image = cv::imread(image_name,flag);
-		if ( !image.data )
+		origin_image = cv::imread(image_name,flag);
+		if ( !origin_image.data )
 		{
 			throw "could not open or find the image";
 		}
 		printf("image %s loaded\n",image_name);
-		printf("rows=%d, columns=%d\n",image.rows,image.cols);
+		printf("rows=%d, columns=%d\n",origin_image.rows,origin_image.cols);
 	}
 	catch ( char* str )
 	{
@@ -33,17 +33,17 @@ CVHW::~CVHW()
 	delete eq_class;
 }
 
-void CVHW::set_pix(int x, int y, int value)
+void CVHW::set_pix(cv::Mat* image, int x, int y, int value)
 {
 	try
 	{
-		if ( x>=image.rows || y>=image.cols )
+		if ( x>=image->rows || y>=image->cols )
 		{
 			throw "wrong position!";
 		}
 		else
 		{
-			uchar* tp = image.data+x*image.cols+y;
+			uchar* tp = image->data+x*image->cols+y;
 			*tp = value;
 		}
 	}
@@ -53,17 +53,17 @@ void CVHW::set_pix(int x, int y, int value)
 	}
 }
 
-uchar CVHW::get_pix(int x, int y)
+uchar CVHW::get_pix(cv::Mat* image, int x, int y)
 {
 	try
 	{
-		if ( x>=image.rows || y>=image.cols )
+		if ( x>=image->rows || y>=image->cols )
 		{
 			throw "wrong position!";
 		}
 		else
 		{
-			uchar* tp = image.data+x*image.cols+y;
+			uchar* tp = image->data+x*image->cols+y;
 			return *tp;
 		}
 	}
@@ -76,5 +76,5 @@ uchar CVHW::get_pix(int x, int y)
 
 cv::Mat CVHW::get_image()
 {
-	return image;
+	return origin_image;
 }

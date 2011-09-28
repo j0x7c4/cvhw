@@ -1,10 +1,13 @@
 #include "cvhw.h"
 
 //a binary image (threshold at 128)
-void CVHW::binary(int threshold)
+cv::Mat* CVHW::binary(int threshold)
 {
-	int m = image.rows;
-	int n = image.cols;
+	cv::Mat* t_image = new cv::Mat(origin_image);
+	//cv::Mat* t_image = new cv::Mat(origin_image.rows,origin_image.cols,0);
+	//memcpy(t_image->data,origin_image.data,512*512);
+	int m = t_image->rows;
+	int n = t_image->cols;
 	//int a,b;
 	//a=b=0;
 	printf("binary\n");
@@ -14,18 +17,19 @@ void CVHW::binary(int threshold)
 		for ( int j = 0 ; j<n ; j++ )
 		{
 			//printf("%d ",get_pix(i,j));
-			if ( get_pix(i,j)>=threshold )
+			if ( get_pix(t_image,i,j)>=threshold )
 			{
 				//a++;
-				set_pix(i,j,255);
+				set_pix(t_image,i,j,255);
 			}
 			else
 			{
 				//b++;
-				set_pix(i,j,0);
+				set_pix(t_image,i,j,0);
 			}
 		}
 	}
+	return t_image;
 	//printf("%d,%d\n",a,b);
 }
 
@@ -33,8 +37,9 @@ void CVHW::binary(int threshold)
 int* CVHW::histogram( )
 {
 	int* histogram_array=new int[256];
-	int m = image.rows;
-	int n = image.cols;
+	cv::Mat* t_image = new cv::Mat(origin_image);
+	int m = t_image->rows;
+	int n = t_image->cols;
 
 	printf("histogram\n");
 	for ( int i = 0 ; i<256 ; i++ )
@@ -45,7 +50,7 @@ int* CVHW::histogram( )
 	{
 		for ( int j=0 ; j<n ; j++ )
 		{
-			histogram_array[get_pix(i,j)]++;
+			histogram_array[get_pix(t_image,i,j)]++;
 		}
 	}
 	return histogram_array;
@@ -53,8 +58,9 @@ int* CVHW::histogram( )
 
 void CVHW::count_run ( )
 {
-	int m = image.rows;
-	int n = image.cols;
+	cv::Mat* t_image = new cv::Mat(origin_image);
+	int m = t_image->rows;
+	int n = t_image->cols;
 	runs = 0;
 	bool flag;
 	for ( int i = 0 ; i<m ; i++ )
@@ -63,12 +69,12 @@ void CVHW::count_run ( )
 		for ( int j=0 ; j<n ; j++) 
 		{
 			//printf("%d",get_pix(i,j)>0?1:0);
-			if ( get_pix(i,j) > 0 && flag ==false) //meet the first 1 of a new run, mark flag as true
+			if ( get_pix(t_image,i,j) > 0 && flag ==false) //meet the first 1 of a new run, mark flag as true
 			{
 				flag = true;
 				runs++;
 			}
-			else if ( get_pix(i,j) == 0 && flag==true )
+			else if ( get_pix(t_image,i,j) == 0 && flag==true )
 			{
 				flag = false; //end of a run, mark flag as false;
 			}
@@ -77,10 +83,11 @@ void CVHW::count_run ( )
 	}
 }
 
-void CVHW::initialize_run_table( )
+void CVHW::initialize_run_table(cv::Mat* t_image )
 {
-	int m = image.rows;
-	int n = image.cols;
+	//cv::Mat* t_image = new cv::Mat(origin_image);
+	int m = t_image->rows;
+	int n = t_image->cols;
 
 	row_start = new int[m];
 	row_end = new int[m];
@@ -101,7 +108,7 @@ void CVHW::initialize_run_table( )
 		row_start[i] = row_end[i] = 0;
 		for ( int j=0 ; j<n ; j++) 
 		{
-			if ( get_pix(i,j) > 0 && flag ==false) //meet the first 1 of a new run, mark flag as true
+			if ( get_pix(t_image,i,j) > 0 && flag ==false) //meet the first 1 of a new run, mark flag as true
 			{
 				flag = true;
 				num_runs++;
@@ -115,7 +122,7 @@ void CVHW::initialize_run_table( )
 				next[num_runs] = 0; //initialize next
 				eq_class[num_runs] = 0; //initialize eq_class
 			}
-			else if ( get_pix(i,j) == 0 && flag==true )
+			else if ( get_pix(t_image,i,j) == 0 && flag==true )
 			{
 				flag = false; //end of a run, mark flag as false;
 				end_col[num_runs]=j-1; //initialize end_col
@@ -173,10 +180,10 @@ void CVHW::make_equivalent(int i1 , int i2)
 	return ;
 }
 
-void CVHW::run_length ( int flag )
+void CVHW::run_length ( cv::Mat* t_image, int flag )
 {
-	int m = image.rows;
-	int n = image.cols;
+	int m = t_image->rows;
+	int n = t_image->cols;
 	int p,q,plast,qlast;
 	int new_label=0;
 	count_run(); //count run
@@ -184,7 +191,7 @@ void CVHW::run_length ( int flag )
 	
 
 	//initialize run_table
-	initialize_run_table( );
+	initialize_run_table( t_image);
 
 	//top-down pass
 	for ( int i = 0 ; i<m ; i++ )
@@ -290,39 +297,40 @@ void CVHW::classic_connected_components( )
 
 }
 
-void CVHW::mark_centroid ( int x, int y ,int r )
+void CVHW::mark_centroid ( cv::Mat* t_image, int x, int y ,int r )
 {
 	int mv[4][2] = { -1,0,0,1,1,0,0,-1};
 	for ( int i = 0 ; i<4 ; i++ )
 	{
-		set_pix(x,y,GRAY);
+		set_pix(t_image,x,y,GRAY);
 		for ( int j = 1 ; j<r ; j++ )
 		{
-			set_pix(x+mv[i][0]*j,y+mv[i][1]*j,GRAY);
+			set_pix(t_image,x+mv[i][0]*j,y+mv[i][1]*j,GRAY);
 		}
 	}
 }
-void CVHW::draw_connected_components ( BOUNDING_BOX&  box )
+void CVHW::draw_connected_components ( cv::Mat* t_image, BOUNDING_BOX&  box )
 {
 	for ( int i = box.top_left_x ; i<=box.bottom_right_x ; i++ ) // draw |
 	{
-		set_pix(i,box.top_left_y,GRAY);
-		set_pix(i,box.bottom_right_y,GRAY);
+		set_pix(t_image,i,box.top_left_y,GRAY);
+		set_pix(t_image,i,box.bottom_right_y,GRAY);
 	}
 
 	for ( int i = box.top_left_y ; i<= box.bottom_right_y ; i++ )
 	{
-		set_pix(box.top_left_x,i,GRAY);
-		set_pix(box.bottom_right_x,i,GRAY);
+		set_pix(t_image,box.top_left_x,i,GRAY);
+		set_pix(t_image,box.bottom_right_x,i,GRAY);
 	}
 
-	mark_centroid(box.centroid_x,box.centroid_y,4);
+	mark_centroid(t_image,box.centroid_x,box.centroid_y,4);
 }
 
-void CVHW::connected_components( int threshold ,int flag )
+cv::Mat* CVHW::connected_components( int threshold ,int flag )
 {
-	binary( );
-	run_length(flag);
+	cv::Mat* t_image = binary( );
+	cv::imshow("binary",*t_image);
+	run_length(t_image,flag);
 	if ( flag == 4 )
 		printf("4-connected\n");
 	else
@@ -363,7 +371,8 @@ void CVHW::connected_components( int threshold ,int flag )
 
 	for ( std::vector<BOUNDING_BOX>::iterator iter = draw_bounding_boxes.begin(); iter!=draw_bounding_boxes.end() ; iter++ )
 	{
-		draw_connected_components(*iter);
+		draw_connected_components(t_image,*iter);
 		//break;
 	}
+	return t_image;
 }
