@@ -4,15 +4,17 @@ int* CVHW::histogram_equalize(cv::Mat& t_image)
 {
 	int* intensity = histogram(t_image);
 	int s[256];
+	double ts[256];
+
 	for ( int k=0 ; k<256 ; k++ )
 	{
-		s[k] = 0;
+		ts[k] = 0;
 		for ( int j = 0 ; j<=k ; j++ )
 		{
-			s[k] += intensity[j];
+			ts[k] += (double)intensity[j];
 		}
-		
-		s[k] = int(((double)s[k]/t_image.cols/t_image.rows)*255.0);
+		ts[k] = 255*ts[k]/t_image.rows/t_image.cols;
+		s[k] = int(ts[k]);
 		
 	}
 	for ( int i=0 ; i<t_image.rows ; i++ )
