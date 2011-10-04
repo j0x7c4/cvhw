@@ -30,10 +30,9 @@ void CVHW::binary(cv::Mat& t_image, int threshold)
 }
 
 //a histogram, return an array pointer
-int* CVHW::histogram( )
+int* CVHW::histogram(cv::Mat& t_image)
 {
 	int* histogram_array=new int[256];
-	cv::Mat t_image = origin_image.clone();
 	int m = t_image.rows;
 	int n = t_image.cols;
 

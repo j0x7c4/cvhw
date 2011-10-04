@@ -56,9 +56,10 @@ public:
 	void diagonally_mirrored(cv::Mat&);
 	//homework 2
 	void binary(cv::Mat&,int threshold=128);
-	int* histogram();
+	int* histogram(cv::Mat&);
 	void connected_components(cv::Mat& , int threshold=500, int flag = 4 );
 	void draw_connected_components ( cv::Mat&, BOUNDING_BOX& );
+	int* histogram_equalize(cv::Mat&);
 };
 
 

@@ -3,18 +3,30 @@
 
 int main ( )
 {
-	CVHW cvhw1("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);
-	cv::imshow("origin",cvhw1.get_image());
+	CVHW cvhw("C:\\Users\\Jie\\Dropbox\\lena.bmp",0);
+	cv::imshow("origin",cvhw.get_image());
 
-	cv::Mat image1 = cvhw1.get_image().clone();
-	cvhw1.connected_components(image1);
-	cv::imshow("connected_componetns",image1);
-	
-	cv::Mat image2 = cvhw1.get_image().clone();
-	cvhw1.upside_down(image2);
-	cv::imshow("upsidedown",image2);
-
-	cv::imshow("origin2",cvhw1.get_image());
+	cv::Mat image = cvhw.get_image().clone();
+	int* h1 = cvhw.histogram(image);
+	int* h2 = cvhw.histogram_equalize(image);
+	cv::imshow("histogram_equalize",image);
+	FILE* f = fopen("C:\\Users\\Jie\\Dropbox\\hs.csv","w");
+	for ( int i = 0 ; i<256 ; i++ )
+	{
+		fprintf(f,"%d,",i);
+	}
+	fprintf(f,"\n");
+	for ( int i = 0 ; i<256 ; i++ )
+	{
+		fprintf(f,"%d,",h1[i]);
+	}
+	fprintf(f,"\n");
+	for ( int i = 0 ; i<256 ; i++ )
+	{
+		fprintf(f,"%d,",h2[i]);
+	}
+	fprintf(f,"\n");
+	fclose(f);
 	/*
 	cv::Mat* image2 = cvhw1.binary();
 	cv::imshow("binary",*image2);
