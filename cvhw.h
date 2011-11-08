@@ -84,6 +84,11 @@ public:
   void BinaryOpening(cv::Mat&,Kernel);
   void BinaryClosing(cv::Mat&,Kernel);
   void BinaryHitAndMiss(cv::Mat&,Kernel,Kernel);
+  //homework 5
+  void GrayScaleDilation(cv::Mat&,Kernel);
+  void GrayScaleErosion(cv::Mat&,Kernel);
+  void GrayScaleOpening(cv::Mat&,Kernel);
+  void GrayScaleClosing(cv::Mat&,Kernel);
 };
 
 
