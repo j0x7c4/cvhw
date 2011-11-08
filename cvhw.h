@@ -3,7 +3,7 @@
 #include<vector>
 #include<set>
 #include<map>
-
+using namespace std;
 //color define
 #define GRAY 128
 
@@ -19,6 +19,20 @@ typedef struct bounding_box
 		top_left_x = top_left_y = bottom_right_x = bottom_right_y = -1; //null
 	}
 }BOUNDING_BOX;
+
+typedef struct point {
+  int x,y;
+  point(int x_, int y_) {
+    x=x_, y=y_;
+  }
+}Point;
+
+typedef struct kernel {
+  int num;
+  vector<Point> neighbour;
+}Kernel;
+
+
 class CVHW
 {
 	cv::Mat origin_image;
@@ -44,10 +58,13 @@ class CVHW
 	void run_length(cv::Mat&, int);
 
 	void classic_connected_components( );
+  vector<Kernel> Kernels;
 public:
 	
 	CVHW(char*,int flag=0);
 	~CVHW();
+  void init();
+  Kernel GetKernel(int);
 	cv::Mat get_image();
 	void save_work(char*);
 	//homework 1
@@ -59,7 +76,14 @@ public:
 	int* histogram(cv::Mat&);
 	void connected_components(cv::Mat& , int threshold=500, int flag = 4 );
 	void draw_connected_components ( cv::Mat&, BOUNDING_BOX& );
-	int* histogram_equalize(cv::Mat&);
+	//homework 3
+  int* histogram_equalize(cv::Mat&);
+  //homework 4
+  void BinaryDilation(cv::Mat&,Kernel);
+  void BinaryErosion(cv::Mat&,Kernel);
+  void BinaryOpening(cv::Mat&,Kernel);
+  void BinaryClosing(cv::Mat&,Kernel);
+  void BinaryHitAndMiss(cv::Mat&,Kernel,Kernel);
 };
 
 
