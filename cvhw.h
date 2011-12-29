@@ -37,7 +37,7 @@ class CVHW
 {
 	cv::Mat origin_image;
 	void set_pix ( cv::Mat&, int , int , int  );
-	uchar get_pix ( cv::Mat&, int , int );
+	
 	void mark_centroid(cv::Mat&,int,int,int);
 	//run-length algorithm varibles
 	int runs;
@@ -64,6 +64,7 @@ public:
 	CVHW(char*,int flag=0);
 	~CVHW();
   void init();
+  uchar get_pix ( cv::Mat&, int , int );
   Kernel GetKernel(int);
 	cv::Mat get_image();
 	void save_work(char*);
@@ -89,6 +90,33 @@ public:
   void GrayScaleErosion(cv::Mat&,Kernel);
   void GrayScaleOpening(cv::Mat&,Kernel);
   void GrayScaleClosing(cv::Mat&,Kernel);
+  //homework 6
+  void DownSample (cv::Mat& source,int row, int col);
+  int H4(int b,int c, int d, int e);
+  int F4(int a1, int a2, int a3, int a4);
+  void YokoiConnectivityNumber ( const cv::Mat& source , vector<string>& res );
+  //homework 7
+  int F4(int a1, int a2, int a3, int a4, int g ,int x);
+  void YokoiConnectivityNumber ( const cv::Mat& image , cv::Mat& res);
+  bool ConnectedShrink ( const cv::Mat& src ,cv::Mat& data, cv::Mat& dest );
+  void PairRelationship( const cv::Mat& src , cv::Mat& dest );
+  void Thinning ( const cv::Mat& src , cv::Mat& dest );
+  //homework 8
+  void AddGaussianNoise ( const cv::Mat& src, cv::Mat& dest, int amp=10 );
+  void AddSaltAndPepperNoise ( const cv::Mat& src, cv::Mat& dest, double threshold=0.05 );
+  void BoxFilter ( const cv::Mat& src, cv::Mat& dest , int mask_size, const vector<vector<int>>& mask );
+  void MedianFilter ( const cv::Mat &src, cv::Mat& dest, int mask_size , const vector<vector<int>>& mask);
+  void OpeningAndClosing ( const cv::Mat & src, cv::Mat& dest,Kernel kernel);
+  void ClosingAndOpening ( const cv::Mat & src, cv::Mat& dest,Kernel kernel);
+  //homework 9
+  void RobertsOperator ( const cv::Mat& src, cv::Mat& dest, int threshold=30 );
+  void PrewittEdgeDetector ( const cv::Mat& src, cv::Mat& dest, int threshold=30 );
+  void SobelEdgeDetector ( const cv::Mat& src, cv::Mat& dest, int threshold=30 );
+  void FreiAndChenGradientOperator ( const cv::Mat& src, cv::Mat& dest, int threshold=30 );
+  void KirschCompassOperator ( const cv::Mat& src, cv::Mat& dest, int threshold=30 );
+  void RobinsonCompassOperator ( const cv::Mat& src, cv::Mat& dest, int threshold=30 );
+  void NevatiaBabuOperator ( const cv::Mat& src, cv::Mat& dest, int threshold=30 );
+
 };
 
 
